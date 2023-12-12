@@ -1,0 +1,36 @@
+﻿@page "/Addstudent"
+@using Assignment_2.Data
+@using Assignment_2.Model
+@inject ApplicationDbContext DbContext
+
+<h1>Add Student</h1>
+
+<EditForm Model="@student" OnValidSubmit="@HandleValidSubmit">
+    <p>
+        <label for="sid">Student Id: </label>
+        <InputNumber id="sid" @bind-Value="student.sid" />
+    </p>
+    <p>
+        <label for="sname">Student Name: </label>
+        <InputText id="sname" @bind-Value="student.sname" />
+    </p>
+    <p>
+        <label for="major">Major: </label>
+        <InputText id="major" @bind-Value="student.major" />
+    </p>
+    <p>
+        <label for="standing">Standing: </label>
+        <InputText id="standing" @bind-Value="student.standing" />
+    </p>
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private Student student = new Student();
+
+    private async Task HandleValidSubmit()
+    {
+        DbContext.Students.Add(student);
+        await DbContext.SaveChangesAsync();
+    }
+}

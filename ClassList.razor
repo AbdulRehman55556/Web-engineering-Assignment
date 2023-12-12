@@ -1,0 +1,45 @@
+﻿@page "/ClassList"
+@using Assignment_2.Data
+@using Assignment_2.Model
+@inject ApplicationDbContext DbContext
+@using Microsoft.EntityFrameworkCore;
+
+<h1>Class List</h1>
+
+@if (classes != null && classes.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Class ID</th>
+                <th>Class Name</th>
+                <th>Room Number</th>
+                <th>Faculty ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var classItem in classes)
+            {
+                <tr>
+                    <td>@classItem.cid</td>
+                    <td>@classItem.name</td>
+                    <td>@classItem.room_number</td>
+                    <td>@classItem.Facultyfid</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No classes found.</p>
+}
+
+@code {
+    private List<Class> classes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        classes = await Task.Run(() => DbContext.Classs.ToListAsync());
+    }
+}

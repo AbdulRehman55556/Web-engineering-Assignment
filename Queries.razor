@@ -1,0 +1,71 @@
+﻿@page "/ClassList"
+@using Model
+@inject ApplicationDbContext Context
+@using Microsoft.EntityFrameworkCore;
+
+<h1>Class List</h1>
+
+@if (classes != null && classes.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Class Name</th>
+                <th>Room Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var classInfo in classes)
+            {
+                <tr>
+                    <td>@classInfo.ClassName</td>
+                    <td>@classInfo.RoomNumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No classes found with more than 100 students.</p>
+}
+
+@code {
+    private List<ClassInfo> classes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Question 1.a: Retrieve the names and room numbers for classes with more than 100 students.
+        var query1 = from c in Context.Classs
+                     where c.Enrolleds.Count > 100
+                     select new ClassInfo { ClassName = c.name, RoomNumber = c.room_number };
+
+        classes = await Task.Run(() => query1.ToList());
+
+        // Question 1.b: Retrieve the ids and majors of students who take no classes with teachers in department 22.
+        var query2 = from s in Context.Students
+                     where !Context.Enrolleds.Any(e => e.Studentsid == s.sid && e.Class.Faculty.deptid == 22)
+                     select new StudentInfo { StudentId = s.sid, Major = s.major };
+
+        var studentsWithNoClassesInDept22 = await Task.Run(() => query2.ToList());
+
+        // Additional LINQ Challenges:
+        // a. Retrieve the names of students who are enrolled in classes and have not yet received any marks.
+        var query3 = from s in Context.Students
+                     where s.Enrolleds.Any(e => e.Class.Enrolleds.Any()) && !s.Enrolleds.Any(e => e.Marks.Any())
+                     select s.sname;
+
+        var studentsWithNoMarks = await Task.Run(() => query3.ToList());
+
+        // b. Find the average age of students in each major. Display the major and the average age.
+        var query4 = from s in Context.Students
+                     group s by s.major into majorGroup
+                     select new MajorAverageAge
+                         {
+                             Major = majorGroup.Key,
+                             AverageAge = majorGroup.Average(s => s.Age) // Assuming you have an Age property in the Student model
+                         };
+
+        var averageAgeByMajor = await Task.Run(() => query4.ToList());
+    }
+}

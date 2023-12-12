@@ -1,0 +1,38 @@
+﻿@page "/Addfaculty"
+@using Assignment_2.Model
+@inject ApplicationDbContext DbContext
+
+<h1>Add Faculty</h1>
+
+<EditForm Model="@facultyModel" OnValidSubmit="@HandleValidSubmit">
+    <p>
+        <label for="fid">Faculty ID: </label>
+        <InputNumber id="fid" @bind-Value="facultyModel.fid" />
+    </p>
+    <p>
+        <label for="fname">Faculty Name: </label>
+        <InputText id="fname" @bind-Value="facultyModel.fname" />
+    </p>
+    <p>
+        <label for="deptid">Department ID: </label>
+        <InputNumber id="deptid" @bind-Value="facultyModel.deptid" />
+    </p>
+    <p>
+        <label for="standing">Standing: </label>
+        <InputText id="standing" @bind-Value="facultyModel.standing" />
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private Faculty facultyModel = new Faculty();
+
+    private async Task HandleValidSubmit()
+    {
+        DbContext.Facultys.Add(facultyModel);
+        await DbContext.SaveChangesAsync();
+
+        
+    }
+}

@@ -1,0 +1,45 @@
+﻿@page "/StudentList"
+@using Assignment_2.Data
+@using Assignment_2.Model
+@inject ApplicationDbContext DbContext
+@using Microsoft.EntityFrameworkCore;
+
+<h1>Student List</h1>
+
+@if (students != null && students.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Major</th>
+                <th>Standing</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in students)
+            {
+                <tr>
+                    <td>@student.sid</td>
+                    <td>@student.sname</td>
+                    <td>@student.major</td>
+                    <td>@student.standing</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No students found.</p>
+}
+
+@code {
+    private List<Student> students;
+
+    protected override async Task OnInitializedAsync()
+    {
+        students = await Task.Run(() => DbContext.Students.ToListAsync());
+    }
+}

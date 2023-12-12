@@ -1,0 +1,42 @@
+﻿@page "/EnrolledList"
+@using Assignment_2.Data
+@using Assignment_2.Model
+@inject ApplicationDbContext DbContext
+
+<h1>Enrolled List</h1>
+
+@if (enrolledList != null && enrolledList.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Enrolled ID</th>
+                <th>Faculty ID</th>
+                <th>Student ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var enrolled in enrolledList)
+            {
+                <tr>
+                    <td>@enrolled.Id</td>
+                    <td>@enrolled.Facultyfid</td>
+                    <td>@enrolled.Studentsid</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No enrolled records found.</p>
+}
+
+@code {
+    private List<Enrolled> enrolledList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        enrolledList = await Task.Run(() => DbContext.Enrolleds.ToList());
+    }
+}

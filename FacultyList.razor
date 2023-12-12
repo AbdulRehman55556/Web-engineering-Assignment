@@ -1,0 +1,44 @@
+﻿@page "/FacultyList"
+@using Assignment_2.Data
+@using Assignment_2.Model
+@inject ApplicationDbContext DbContext
+
+<h1>Faculty List</h1>
+
+@if (facultyList != null && facultyList.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Faculty ID</th>
+                <th>Faculty Name</th>
+                <th>Department ID</th>
+                <th>Standing</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var faculty in facultyList)
+            {
+                <tr>
+                    <td>@faculty.fid</td>
+                    <td>@faculty.fname</td>
+                    <td>@faculty.deptid</td>
+                    <td>@faculty.standing</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No faculty records found.</p>
+}
+
+@code {
+    private List<Faculty> facultyList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        facultyList = await Task.Run(() => DbContext.Facultys.ToList());
+    }
+}

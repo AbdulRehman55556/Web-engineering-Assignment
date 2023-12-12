@@ -1,0 +1,33 @@
+﻿@page "/Addenrolled"
+@using Assignment_2.Model
+@inject ApplicationDbContext DbContext
+
+<h1>Add Enrolled</h1>
+
+<EditForm Model="@enrolledModel" OnValidSubmit="@HandleValidSubmit">
+    <p>
+        <label for="Id">Enrolled ID: </label>
+        <InputNumber id="Id" @bind-Value="enrolledModel.Id" />
+    </p>
+    <p>
+        <label for="Facultyfid">Faculty ID: </label>
+        <InputNumber id="Facultyfid" @bind-Value="enrolledModel.Facultyfid" />
+    </p>
+    <p>
+        <label for="Studentsid">Student ID: </label>
+        <InputNumber id="Studentsid" @bind-Value="enrolledModel.Studentsid" />
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private Enrolled enrolledModel = new Enrolled();
+
+    private async Task HandleValidSubmit()
+    {
+        DbContext.Enrolleds.Add(enrolledModel);
+        await DbContext.SaveChangesAsync();
+
+    }
+}

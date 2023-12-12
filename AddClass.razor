@@ -1,0 +1,38 @@
+﻿@page "/Addclass"
+@using Assignment_2.Model
+@inject ApplicationDbContext DbContext
+
+<h1>Add Class</h1>
+
+<EditForm Model="@classModel" OnValidSubmit="@HandleValidSubmit">
+    <p>
+        <label for="cid">Class ID: </label>
+        <InputNumber id="cid" @bind-Value="classModel.cid" />
+    </p>
+    <p>
+        <label for="name">Class Name: </label>
+        <InputText id="name" @bind-Value="classModel.name" />
+    </p>
+    <p>
+        <label for="room_number">Room Number: </label>
+        <InputNumber id="room_number" @bind-Value="classModel.room_number" />
+    </p>
+    <p>
+        <label for="Facultyfid">Faculty ID: </label>
+        <InputNumber id="Facultyfid" @bind-Value="classModel.Facultyfid" />
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private Class classModel = new Class();
+
+    private async Task HandleValidSubmit()
+    {
+        DbContext.Classs.Add(classModel);
+        await DbContext.SaveChangesAsync();
+
+      
+    }
+}
